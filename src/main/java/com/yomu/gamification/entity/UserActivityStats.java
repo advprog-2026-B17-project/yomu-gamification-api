@@ -18,9 +18,6 @@ public class UserActivityStats {
     @Column(name = "quiz_attempts", nullable = false)
     private Integer quizAttempts = 0;
 
-    @Column(name = "total_score", nullable = false)
-    private Integer totalScore = 0;
-
     @Column(name = "average_accuracy", nullable = false)
     private Double averageAccuracy = 0.0;
 
@@ -33,8 +30,6 @@ public class UserActivityStats {
     public void setReadingsCompleted(Integer readingsCompleted) { this.readingsCompleted = readingsCompleted; }
     public Integer getQuizAttempts() { return quizAttempts; }
     public void setQuizAttempts(Integer quizAttempts) { this.quizAttempts = quizAttempts; }
-    public Integer getTotalScore() { return totalScore; }
-    public void setTotalScore(Integer totalScore) { this.totalScore = totalScore; }
     public Double getAverageAccuracy() { return averageAccuracy; }
     public void setAverageAccuracy(Double averageAccuracy) { this.averageAccuracy = averageAccuracy; }
     public OffsetDateTime getLastActivityAt() { return lastActivityAt; }
