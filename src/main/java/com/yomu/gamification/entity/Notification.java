@@ -14,6 +14,9 @@ public class Notification {
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
+    @Column(name = "notification_type", nullable = false, length = 50)
+    private String notificationType;
+
     @Column(nullable = false, length = 100)
     private String title;
 
@@ -30,6 +33,8 @@ public class Notification {
     public void setId(UUID id) { this.id = id; }
     public UUID getUserId() { return userId; }
     public void setUserId(UUID userId) { this.userId = userId; }
+    public String getNotificationType() { return notificationType; }
+    public void setNotificationType(String notificationType) { this.notificationType = notificationType; }
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
     public String getMessage() { return message; }

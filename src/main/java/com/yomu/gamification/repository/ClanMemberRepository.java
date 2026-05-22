@@ -10,6 +10,7 @@ import java.util.UUID;
 @Repository
 public interface ClanMemberRepository extends JpaRepository<ClanMember, UUID> {
     Optional<ClanMember> findByClanIdAndUserId(UUID clanId, UUID userId);
+    Optional<ClanMember> findByUserId(UUID userId);
     long countByClanId(UUID clanId);
     boolean existsByUserId(UUID userId);
 }
