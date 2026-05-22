@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "processed_events")
+@Table(name = "processed_events", schema = "gamification")
 public class ProcessedEvent {
 
     @Id
