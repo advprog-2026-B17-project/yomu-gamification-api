@@ -32,7 +32,21 @@ public class MissionService {
     }
 
     public List<MissionRow> getUserMissions(UUID userId) {
-        return missionRepository.findActiveMissionsByUserId(userId);
+        List<Object[]> results = missionRepository.findActiveMissionsByUserId(userId);
+        return results.stream()
+                .map(row -> new MissionRow(
+                        row[0].toString(),
+                        (String) row[1],
+                        (String) row[2],
+                        (String) row[3],
+                        row[4] instanceof Number ? ((Number) row[4]).intValue() : 0,
+                        row[5] instanceof Number ? ((Number) row[5]).intValue() : 0,
+                        row[6] instanceof Number ? ((Number) row[6]).longValue() : 0L,
+                        row[7] instanceof Number ? ((Number) row[7]).longValue() : 0L,
+                        row[8] != null ? (Boolean) row[8] : false,
+                        row[9] != null ? java.time.LocalDate.parse(row[9].toString().substring(0, 10)) : null
+                ))
+                .toList();
     }
 
     public List<DailyMissionDTO> getAllMissions() {

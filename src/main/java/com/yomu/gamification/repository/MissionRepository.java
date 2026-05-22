@@ -22,5 +22,5 @@ public interface MissionRepository extends JpaRepository<DailyMission, UUID> {
         LEFT JOIN gamification.user_missions um ON dm.id = um.mission_id AND um.user_id = :userId AND um.date = CURRENT_DATE
         WHERE dm.is_active = true
         """, nativeQuery = true)
-    List<MissionRow> findActiveMissionsByUserId(@Param("userId") UUID userId);
+    List<Object[]> findActiveMissionsByUserId(@Param("userId") UUID userId);
 }
