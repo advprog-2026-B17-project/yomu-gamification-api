@@ -74,7 +74,6 @@ public class EventConsumerService {
         String userId = (String) payload.get("userId");
         String username = (String) payload.get("username");
         String displayName = (String) payload.get("displayName");
-        String role = (String) payload.getOrDefault("role", "student");
 
         log.info("Creating user profile for userId: {}", userId);
 
@@ -83,8 +82,6 @@ public class EventConsumerService {
         profile.setUserId(UUID.fromString(userId));
         profile.setUsername(username);
         profile.setDisplayName(displayName);
-        profile.setRole(role);
-        profile.setDeleted(false);
         profile.setUpdatedAt(OffsetDateTime.now());
         userProfileRepository.save(profile);
     }
@@ -95,14 +92,12 @@ public class EventConsumerService {
         String userId = (String) payload.get("userId");
         String username = (String) payload.get("username");
         String displayName = (String) payload.get("displayName");
-        String role = (String) payload.getOrDefault("role", "student");
 
         log.info("Updating user profile for userId: {}", userId);
 
         userProfileRepository.findByUserId(UUID.fromString(userId)).ifPresent(profile -> {
             profile.setUsername(username);
             profile.setDisplayName(displayName);
-            profile.setRole(role);
             profile.setUpdatedAt(OffsetDateTime.now());
             userProfileRepository.save(profile);
         });
@@ -113,13 +108,10 @@ public class EventConsumerService {
         Map<String, Object> payload = (Map<String, Object>) message.get("payload");
         String userId = (String) payload.get("userId");
 
-        log.info("Marking user profile as deleted for userId: {}", userId);
+        log.info("Deleting user profile for userId: {}", userId);
 
-        userProfileRepository.findByUserId(UUID.fromString(userId)).ifPresent(profile -> {
-            profile.setDeleted(true);
-            profile.setUpdatedAt(OffsetDateTime.now());
-            userProfileRepository.save(profile);
-        });
+        userProfileRepository.findByUserId(UUID.fromString(userId))
+                .ifPresent(profile -> userProfileRepository.delete(profile));
     }
 
     // === Reading Events ===
@@ -231,7 +223,6 @@ public class EventConsumerService {
         stats.setUserId(userId);
         stats.setReadingsCompleted(stats.getReadingsCompleted() + 1);
         stats.setQuizAttempts(stats.getQuizAttempts() + 1);
-        stats.setTotalScore(stats.getTotalScore() + score);
         stats.setAverageAccuracy(calculateNewAverage(stats, accuracy));
         stats.setLastActivityAt(OffsetDateTime.now());
 
