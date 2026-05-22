@@ -63,7 +63,17 @@ public class ClanService {
     }
 
     public List<LeaderboardEntry> getClanLeaderboard(UUID clanId) {
-        return leaderboardRepository.findClanLeaderboardByClanId(clanId);
+        List<Object[]> results = leaderboardRepository.findClanLeaderboardByClanId(clanId);
+        return results.stream()
+                .map(row -> new LeaderboardEntry(
+                        row[0].toString(),
+                        (String) row[1],
+                        (String) row[2],
+                        row[3] instanceof Number ? ((Number) row[3]).longValue() : 0L,
+                        row[4] instanceof Number ? ((Number) row[4]).longValue() : 0L,
+                        row[5] instanceof Number ? ((Number) row[5]).doubleValue() : 0.0
+                ))
+                .toList();
     }
 
     @Transactional

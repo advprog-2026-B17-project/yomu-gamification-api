@@ -14,16 +14,16 @@ import java.util.UUID;
 public interface LeaderboardRepository extends JpaRepository<ClanMember, UUID> {
 
     @Query(value = """
-        SELECT u.id::text as user_id, u.display_name, u.username,
-               COALESCE(SUM(cr.score), 0) as total_score,
-               COUNT(cr.id) as readings_completed,
-               COALESCE(AVG(cr.accuracy), 0)::float8 as avg_accuracy
+        SELECT u.id as userId, u.display_name as displayName, u.username as username,
+               COALESCE(SUM(cr.score), 0) as totalScore,
+               COUNT(cr.id) as readingsCompleted,
+               COALESCE(AVG(cr.accuracy), 0) as avgAccuracy
         FROM gamification.clan_members cm
         JOIN auth.users u ON cm.user_id = u.id
         LEFT JOIN quiz.completed_readings cr ON u.id = cr.user_id
         WHERE cm.clan_id = :clanId
         GROUP BY u.id, u.display_name, u.username
-        ORDER BY total_score DESC
+        ORDER BY totalScore DESC
         """, nativeQuery = true)
-    List<LeaderboardEntry> findClanLeaderboardByClanId(@Param("clanId") UUID clanId);
+    List<Object[]> findClanLeaderboardByClanId(@Param("clanId") UUID clanId);
 }
