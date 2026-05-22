@@ -79,8 +79,7 @@ public class GatewaySecretFilter extends OncePerRequestFilter {
     private boolean hasValidGatewaySecret(HttpServletRequest request) {
         String secret = appConfig.getGateway().getSecret();
         if (!StringUtils.hasText(secret)) {
-            // No secret configured, allow requests that come from gateway (have user headers)
-            // This is development mode - trust gateway to have validated JWT
+            // No secret configured, allow requests with user headers (development mode)
             String userId = request.getHeader(USER_ID_HEADER);
             return StringUtils.hasText(userId);
         }
