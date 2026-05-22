@@ -59,5 +59,5 @@ public interface ClanRepository extends JpaRepository<Clan, UUID> {
         GROUP BY c.id, c.name, c.tier, c.total_score
         ORDER BY effective_score DESC, c.name ASC
         """, nativeQuery = true)
-    List<ClanLeaderboardEntry> findGlobalClanLeaderboard();
+    List<Object[]> findGlobalClanLeaderboard();
 }
