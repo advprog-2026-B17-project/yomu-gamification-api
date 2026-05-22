@@ -60,12 +60,18 @@ public class GamificationProfileService {
 
         // Get clan summary
         Optional<Object[]> clanRow = clanRepository.findUserClanByUserId(userId);
-        GamificationProfileResponse.ClanSummary clanSummary = clanRow.map(c -> new GamificationProfileResponse.ClanSummary(
-                c[0].toString(),
-                (String) c[1],
-                (String) c[2],
-                c[7] != null ? (String) c[7] : "member"
-        )).orElse(null);
+        GamificationProfileResponse.ClanSummary clanSummary = null;
+        if (clanRow.isPresent()) {
+            Object[] c = clanRow.get();
+            if (c != null && c.length >= 8 && c[0] != null) {
+                clanSummary = new GamificationProfileResponse.ClanSummary(
+                        c[0].toString(),
+                        (String) c[1],
+                        (String) c[2],
+                        c[7] != null ? (String) c[7] : "member"
+                );
+            }
+        }
 
         return new GamificationProfileResponse(
                 userId.toString(),
