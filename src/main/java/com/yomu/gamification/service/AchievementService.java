@@ -20,20 +20,20 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class AchievementService {
 
-    private final AchievementEntityRepository achievementRepository;
-    private final AchievementRepository achievementRowRepository;
+    private final AchievementRepository achievementRepository;
+    private final AchievementEntityRepository achievementEntityRepository;
     private final UserAchievementRepository userAchievementRepository;
 
-    public AchievementService(AchievementEntityRepository achievementRepository,
-                               AchievementRepository achievementRowRepository,
+    public AchievementService(AchievementRepository achievementRepository,
+                               AchievementEntityRepository achievementEntityRepository,
                                UserAchievementRepository userAchievementRepository) {
         this.achievementRepository = achievementRepository;
-        this.achievementRowRepository = achievementRowRepository;
+        this.achievementEntityRepository = achievementEntityRepository;
         this.userAchievementRepository = userAchievementRepository;
     }
 
     public List<AchievementRow> getUserAchievements(UUID userId) {
-        return achievementRowRepository.findUnlockedAchievementsByUserId(userId);
+        return achievementEntityRepository.findUnlockedAchievementsByUserId(userId);
     }
 
     public List<AchievementDTO> getAllAchievements() {

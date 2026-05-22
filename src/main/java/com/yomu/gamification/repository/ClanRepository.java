@@ -2,6 +2,7 @@ package com.yomu.gamification.repository;
 
 import com.yomu.gamification.dto.ClanRow;
 import com.yomu.gamification.dto.ClanLeaderboardEntry;
+import com.yomu.gamification.entity.Clan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface ClanRepository extends JpaRepository<ClanRow, UUID> {
+public interface ClanRepository extends JpaRepository<Clan, UUID> {
 
     @Query(value = """
         SELECT c.id::text as id, c.name, c.tier,

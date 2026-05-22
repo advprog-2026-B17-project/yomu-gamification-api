@@ -1,6 +1,7 @@
 package com.yomu.gamification.repository;
 
 import com.yomu.gamification.dto.NotificationRow;
+import com.yomu.gamification.entity.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface NotificationRepository extends JpaRepository<NotificationRow, UUID> {
+public interface NotificationRepository extends JpaRepository<Notification, UUID> {
 
     @Query(value = """
         SELECT id::text as id, user_id::text as user_id, notification_type, title, message, is_read, created_at

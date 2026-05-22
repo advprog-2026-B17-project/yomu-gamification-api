@@ -1,6 +1,7 @@
 package com.yomu.gamification.repository;
 
 import com.yomu.gamification.dto.MissionRow;
+import com.yomu.gamification.entity.DailyMission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface MissionRepository extends JpaRepository<MissionRow, UUID> {
+public interface MissionRepository extends JpaRepository<DailyMission, UUID> {
 
     @Query(value = """
         SELECT dm.id::text as id, dm.title, dm.description, dm.target_type, dm.target_count, dm.xp_reward,

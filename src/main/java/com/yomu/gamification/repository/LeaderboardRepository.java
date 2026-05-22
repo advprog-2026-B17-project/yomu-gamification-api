@@ -1,6 +1,7 @@
 package com.yomu.gamification.repository;
 
 import com.yomu.gamification.dto.LeaderboardEntry;
+import com.yomu.gamification.entity.ClanMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface LeaderboardRepository extends JpaRepository<LeaderboardEntry, UUID> {
+public interface LeaderboardRepository extends JpaRepository<ClanMember, UUID> {
 
     @Query(value = """
         SELECT u.id::text as user_id, u.display_name, u.username,
