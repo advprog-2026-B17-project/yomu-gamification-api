@@ -45,7 +45,7 @@ public interface ClanRepository extends JpaRepository<Clan, UUID> {
         GROUP BY c.id, c.name, c.tier, c.total_score, c.leader_id, u.display_name, u.username, member.role
         LIMIT 1
         """, nativeQuery = true)
-    Optional<ClanRow> findUserClanByUserId(@Param("userId") UUID userId);
+    Optional<Object[]> findUserClanByUserId(@Param("userId") UUID userId);
 
     @Query(value = """
         SELECT CAST(c.id AS text) as clan_id, c.name as clan_name, c.tier,

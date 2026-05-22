@@ -55,7 +55,17 @@ public class ClanService {
     }
 
     public Optional<ClanRow> getUserClan(UUID userId) {
-        return clanRepository.findUserClanByUserId(userId);
+        return clanRepository.findUserClanByUserId(userId)
+                .map(row -> new ClanRow(
+                        row[0].toString(),
+                        (String) row[1],
+                        (String) row[2],
+                        row[3] instanceof Number ? ((Number) row[3]).doubleValue() : 0.0,
+                        row[4].toString(),
+                        (String) row[5],
+                        row[6] instanceof Number ? ((Number) row[6]).longValue() : 0L,
+                        (String) row[7]
+                ));
     }
 
     public List<ClanLeaderboardEntry> getGlobalLeaderboard() {
