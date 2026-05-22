@@ -1,7 +1,6 @@
 package com.yomu.gamification.service;
 
 import com.yomu.gamification.dto.AchievementRow;
-import com.yomu.gamification.dto.ClanRow;
 import com.yomu.gamification.dto.GamificationProfileResponse;
 import com.yomu.gamification.dto.StatsDTO;
 import com.yomu.gamification.repository.AchievementEntityRepository;
@@ -60,12 +59,12 @@ public class GamificationProfileService {
                 .toList();
 
         // Get clan summary
-        Optional<ClanRow> clanRow = clanRepository.findUserClanByUserId(userId);
+        Optional<Object[]> clanRow = clanRepository.findUserClanByUserId(userId);
         GamificationProfileResponse.ClanSummary clanSummary = clanRow.map(c -> new GamificationProfileResponse.ClanSummary(
-                c.getId(),
-                c.getName(),
-                c.getTier(),
-                c.getMyRole() != null ? c.getMyRole() : "member"
+                c[0].toString(),
+                (String) c[1],
+                (String) c[2],
+                c[7] != null ? (String) c[7] : "member"
         )).orElse(null);
 
         return new GamificationProfileResponse(
