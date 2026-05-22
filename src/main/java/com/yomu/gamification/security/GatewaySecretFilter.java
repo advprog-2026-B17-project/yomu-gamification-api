@@ -26,6 +26,7 @@ public class GatewaySecretFilter extends OncePerRequestFilter {
     private static final String ATTR_USER_ID = "authenticated.userId";
     private static final String ATTR_USER_ROLE = "authenticated.userRole";
     private static final String ATTR_USERNAME = "authenticated.username";
+    private static final String ATTR_USER_ID_SHORT = "userId";
 
     private final AppConfig appConfig;
 
@@ -59,6 +60,7 @@ public class GatewaySecretFilter extends OncePerRequestFilter {
 
         if (StringUtils.hasText(userId)) {
             request.setAttribute(ATTR_USER_ID, userId);
+            request.setAttribute(ATTR_USER_ID_SHORT, userId);
         }
         if (StringUtils.hasText(userRole)) {
             request.setAttribute(ATTR_USER_ROLE, userRole);
