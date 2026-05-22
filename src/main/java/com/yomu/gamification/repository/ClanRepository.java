@@ -16,12 +16,12 @@ import java.util.UUID;
 public interface ClanRepository extends JpaRepository<Clan, UUID> {
 
     @Query(value = """
-        SELECT CAST(c.id AS text) as id, c.name, c.tier,
-               CAST((COALESCE(c.total_score, 0) * COALESCE(EXP(SUM(LN(b.multiplier)) FILTER (WHERE b.expires_at IS NULL)), 1.0)) AS double precision) as total_score,
-               CAST(c.leader_id AS text) as leader_id,
-               COALESCE(u.display_name, u.username, 'Unknown') as leader_name,
-               CAST(COUNT(DISTINCT cm.id) AS bigint) as member_count,
-               MAX(CASE WHEN cm.user_id = :userId THEN cm.role ELSE NULL END) as my_role
+        SELECT c.id as id, c.name as name, c.tier as tier,
+               c.total_score as totalScore,
+               c.leader_id as leaderId,
+               COALESCE(u.display_name, u.username, 'Unknown') as leaderName,
+               COUNT(DISTINCT cm.id) as memberCount,
+               MAX(CASE WHEN cm.user_id = :userId THEN cm.role ELSE NULL END) as myRole
         FROM gamification.clans c
         LEFT JOIN auth.users u ON c.leader_id = u.id
         LEFT JOIN gamification.clan_members cm ON c.id = cm.clan_id
@@ -29,7 +29,7 @@ public interface ClanRepository extends JpaRepository<Clan, UUID> {
         GROUP BY c.id, c.name, c.tier, c.total_score, c.leader_id, u.display_name, u.username
         ORDER BY total_score DESC, c.name ASC
         """, nativeQuery = true)
-    List<ClanRow> findAllClansWithUserRole(@Param("userId") UUID userId);
+    List<Object[]> findAllClansWithUserRole(@Param("userId") UUID userId);
 
     @Query(value = """
         SELECT CAST(c.id AS text) as id, c.name, c.tier, CAST(COALESCE(c.total_score, 0) AS double precision) as total_score,

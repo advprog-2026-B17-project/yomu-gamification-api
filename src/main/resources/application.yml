@@ -35,7 +35,7 @@ management:
 
 app:
   gateway:
-    secret: ${GATEWAY_SHARED_SECRET:yomu-dev-gateway-secret-change-in-production}
+    secret: ${GATEWAY_SHARED_SECRET:}
 
 rabbitmq:
   exchange: yomu.events
