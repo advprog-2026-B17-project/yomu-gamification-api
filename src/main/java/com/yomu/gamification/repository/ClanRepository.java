@@ -16,11 +16,11 @@ import java.util.UUID;
 public interface ClanRepository extends JpaRepository<Clan, UUID> {
 
     @Query(value = """
-        SELECT c.id::text as id, c.name, c.tier,
-               (COALESCE(c.total_score, 0) * COALESCE(EXP(SUM(LN(b.multiplier)) FILTER (WHERE b.expires_at IS NULL)), 1.0))::float8 as total_score,
-               c.leader_id::text as leader_id,
+        SELECT CAST(c.id AS text) as id, c.name, c.tier,
+               CAST((COALESCE(c.total_score, 0) * COALESCE(EXP(SUM(LN(b.multiplier)) FILTER (WHERE b.expires_at IS NULL)), 1.0)) AS double precision) as total_score,
+               CAST(c.leader_id AS text) as leader_id,
                COALESCE(u.display_name, u.username, 'Unknown') as leader_name,
-               COUNT(DISTINCT cm.id)::int8 as member_count,
+               CAST(COUNT(DISTINCT cm.id) AS bigint) as member_count,
                MAX(CASE WHEN cm.user_id = :userId THEN cm.role ELSE NULL END) as my_role
         FROM gamification.clans c
         LEFT JOIN auth.users u ON c.leader_id = u.id
@@ -32,10 +32,10 @@ public interface ClanRepository extends JpaRepository<Clan, UUID> {
     List<ClanRow> findAllClansWithUserRole(@Param("userId") UUID userId);
 
     @Query(value = """
-        SELECT c.id::text as id, c.name, c.tier, COALESCE(c.total_score, 0)::float8 as total_score,
-               c.leader_id::text as leader_id,
+        SELECT CAST(c.id AS text) as id, c.name, c.tier, CAST(COALESCE(c.total_score, 0) AS double precision) as total_score,
+               CAST(c.leader_id AS text) as leader_id,
                COALESCE(u.display_name, u.username, 'Unknown') as leader_name,
-               COUNT(all_members.id)::int8 as member_count,
+               CAST(COUNT(all_members.id) AS bigint) as member_count,
                member.role as my_role
         FROM gamification.clan_members member
         JOIN gamification.clans c ON member.clan_id = c.id
@@ -48,11 +48,11 @@ public interface ClanRepository extends JpaRepository<Clan, UUID> {
     Optional<ClanRow> findUserClanByUserId(@Param("userId") UUID userId);
 
     @Query(value = """
-        SELECT c.id::text as clan_id, c.name as clan_name, c.tier,
-               COALESCE(c.total_score, 0)::float8 as total_score,
-               COUNT(DISTINCT cm.id)::int8 as member_count,
-               COALESCE(EXP(SUM(LN(b.multiplier)) FILTER (WHERE b.expires_at IS NULL)), 1.0)::float8 as multiplier,
-               (COALESCE(c.total_score, 0) * COALESCE(EXP(SUM(LN(b.multiplier)) FILTER (WHERE b.expires_at IS NULL)), 1.0))::float8 as effective_score
+        SELECT CAST(c.id AS text) as clan_id, c.name as clan_name, c.tier,
+               CAST(COALESCE(c.total_score, 0) AS double precision) as total_score,
+               CAST(COUNT(DISTINCT cm.id) AS bigint) as member_count,
+               CAST(COALESCE(EXP(SUM(LN(b.multiplier)) FILTER (WHERE b.expires_at IS NULL)), 1.0) AS double precision) as multiplier,
+               CAST((COALESCE(c.total_score, 0) * COALESCE(EXP(SUM(LN(b.multiplier)) FILTER (WHERE b.expires_at IS NULL)), 1.0)) AS double precision) as effective_score
         FROM gamification.clans c
         LEFT JOIN gamification.clan_members cm ON c.id = cm.clan_id
         LEFT JOIN gamification.buffs b ON c.id = b.clan_id

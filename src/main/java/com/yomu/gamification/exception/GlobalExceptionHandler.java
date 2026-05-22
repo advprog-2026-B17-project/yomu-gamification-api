@@ -54,7 +54,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", OffsetDateTime.now());
+        body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        body.put("error", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+        body.put("message", ex.getMessage());
+        body.put("stackTrace", ex.getStackTrace()[0].toString());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
 
     private ResponseEntity<Map<String, Object>> buildErrorResponse(HttpStatus status, String message) {
