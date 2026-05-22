@@ -1,13 +1,17 @@
 package com.yomu.gamification.service;
 
 import com.yomu.gamification.dto.*;
+import com.yomu.gamification.entity.Clan;
 import com.yomu.gamification.entity.DailyMission;
 import com.yomu.gamification.entity.UserMission;
 import com.yomu.gamification.exception.BadRequestException;
 import com.yomu.gamification.exception.ResourceNotFoundException;
+import com.yomu.gamification.repository.ClanEntityRepository;
+import com.yomu.gamification.repository.ClanMemberRepository;
 import com.yomu.gamification.repository.DailyMissionRepository;
 import com.yomu.gamification.repository.MissionRepository;
 import com.yomu.gamification.repository.UserMissionRepository;
+import com.yomu.gamification.repository.UserProfileRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,13 +26,22 @@ public class MissionService {
     private final DailyMissionRepository dailyMissionRepository;
     private final MissionRepository missionRepository;
     private final UserMissionRepository userMissionRepository;
+    private final UserProfileRepository userProfileRepository;
+    private final ClanMemberRepository clanMemberRepository;
+    private final ClanEntityRepository clanEntityRepository;
 
     public MissionService(DailyMissionRepository dailyMissionRepository,
                           MissionRepository missionRepository,
-                          UserMissionRepository userMissionRepository) {
+                          UserMissionRepository userMissionRepository,
+                          UserProfileRepository userProfileRepository,
+                          ClanMemberRepository clanMemberRepository,
+                          ClanEntityRepository clanEntityRepository) {
         this.dailyMissionRepository = dailyMissionRepository;
         this.missionRepository = missionRepository;
         this.userMissionRepository = userMissionRepository;
+        this.userProfileRepository = userProfileRepository;
+        this.clanMemberRepository = clanMemberRepository;
+        this.clanEntityRepository = clanEntityRepository;
     }
 
     public List<MissionRow> getUserMissions(UUID userId) {
@@ -123,6 +136,20 @@ public class MissionService {
 
         userMission.setClaimed(true);
         userMission = userMissionRepository.save(userMission);
+
+        // Add XP to user profile
+        userProfileRepository.findByUserId(userId).ifPresent(profile -> {
+            profile.setTotalXp(profile.getTotalXp() + mission.getXpReward());
+            userProfileRepository.save(profile);
+        });
+
+        // Add XP to clan total_score if user is in a clan
+        clanMemberRepository.findByUserId(userId).ifPresent(member -> {
+            clanEntityRepository.findById(member.getClanId()).ifPresent(clan -> {
+                clan.setTotalScore(clan.getTotalScore().add(java.math.BigDecimal.valueOf(mission.getXpReward())));
+                clanEntityRepository.save(clan);
+            });
+        });
 
         return new UserMissionDTO(
                 userMission.getId(),
