@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: yomu-gamification-api
+    env: docker
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: GATEWAY_SHARED_SECRET
+        sync: false
+      - key: DATABASE_JDBC_URL
+        sync: false
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: RABBITMQ_HOST
+        sync: false
+      - key: RABBITMQ_PORT
+        value: "5672"
+      - key: RABBITMQ_USERNAME
+        sync: false
+      - key: RABBITMQ_PASSWORD
+        sync: false
