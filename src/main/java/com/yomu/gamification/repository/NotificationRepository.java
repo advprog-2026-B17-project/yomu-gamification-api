@@ -15,7 +15,7 @@ import java.util.UUID;
 public interface NotificationRepository extends JpaRepository<Notification, UUID> {
 
     @Query(value = """
-        SELECT id::text as id, user_id::text as user_id, notification_type, title, message, is_read, created_at
+        SELECT CAST(id AS text) as id, CAST(user_id AS text) as user_id, notification_type, title, message, is_read, created_at
         FROM gamification.notifications
         WHERE user_id = :userId
         ORDER BY created_at DESC

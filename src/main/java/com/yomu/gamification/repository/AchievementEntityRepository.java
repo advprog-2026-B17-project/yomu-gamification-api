@@ -17,7 +17,7 @@ public interface AchievementEntityRepository extends JpaRepository<Achievement, 
     Optional<Achievement> findByAchievementType(String achievementType);
 
     @Query(value = """
-        SELECT a.id::text as id, a.name, a.description, a.milestone, a.icon_url,
+        SELECT CAST(a.id AS text) as id, a.name, a.description, a.milestone, a.icon_url,
                true as unlocked, ua.unlocked_at, ua.is_visible as visible
         FROM gamification.achievements a
         JOIN gamification.user_achievements ua ON a.id = ua.achievement_id

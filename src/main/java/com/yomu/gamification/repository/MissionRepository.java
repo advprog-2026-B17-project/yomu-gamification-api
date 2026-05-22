@@ -14,7 +14,7 @@ import java.util.UUID;
 public interface MissionRepository extends JpaRepository<DailyMission, UUID> {
 
     @Query(value = """
-        SELECT dm.id::text as id, dm.title, dm.description, dm.target_type, dm.target_count, dm.xp_reward,
+        SELECT CAST(dm.id AS text) as id, dm.title, dm.description, dm.target_type, dm.target_count, dm.xp_reward,
                COALESCE(um.progress, 0) as progress,
                COALESCE(um.claimed, false) as claimed,
                COALESCE(um.date, CURRENT_DATE) as date
