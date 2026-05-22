@@ -13,6 +13,7 @@ import com.yomu.gamification.repository.UserAchievementRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +34,19 @@ public class AchievementService {
     }
 
     public List<AchievementRow> getUserAchievements(UUID userId) {
-        return achievementEntityRepository.findUnlockedAchievementsByUserId(userId);
+        List<Object[]> results = achievementEntityRepository.findUnlockedAchievementsByUserId(userId);
+        return results.stream()
+                .map(row -> new AchievementRow(
+                        row[0].toString(),
+                        (String) row[1],
+                        (String) row[2],
+                        row[3] instanceof Number ? ((Number) row[3]).intValue() : 0,
+                        (String) row[4],
+                        (Boolean) row[5],
+                        row[6] != null ? java.time.OffsetDateTime.parse(row[6].toString().substring(0, 10) + "T00:00:00Z") : null,
+                        row[7] != null ? (Boolean) row[7] : false
+                ))
+                .toList();
     }
 
     public List<AchievementDTO> getAllAchievements() {

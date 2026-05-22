@@ -21,7 +21,7 @@ public interface NotificationRepository extends JpaRepository<Notification, UUID
         ORDER BY created_at DESC
         LIMIT 50
         """, nativeQuery = true)
-    List<NotificationRow> findByUserIdOrderByCreatedAtDesc(@Param("userId") UUID userId);
+    List<Object[]> findByUserIdOrderByCreatedAtDesc(@Param("userId") UUID userId);
 
     @Query(value = """
         SELECT COUNT(*) FROM gamification.notifications WHERE user_id = :userId AND is_read = false

@@ -24,5 +24,5 @@ public interface AchievementEntityRepository extends JpaRepository<Achievement, 
         WHERE ua.user_id = :userId
         ORDER BY ua.unlocked_at DESC
         """, nativeQuery = true)
-    List<AchievementRow> findUnlockedAchievementsByUserId(@Param("userId") UUID userId);
+    List<Object[]> findUnlockedAchievementsByUserId(@Param("userId") UUID userId);
 }

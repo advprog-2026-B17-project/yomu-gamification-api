@@ -5,6 +5,7 @@ import com.yomu.gamification.repository.NotificationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +20,18 @@ public class NotificationService {
     }
 
     public List<NotificationRow> getUserNotifications(UUID userId) {
-        return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        List<Object[]> results = notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        return results.stream()
+                .map(row -> new NotificationRow(
+                        row[0].toString(),
+                        row[1].toString(),
+                        (String) row[2],
+                        (String) row[3],
+                        (String) row[4],
+                        row[5] != null ? (Boolean) row[5] : false,
+                        row[6] != null ? OffsetDateTime.parse(row[6].toString().substring(0, 10) + "T00:00:00Z") : null
+                ))
+                .toList();
     }
 
     public Long getUnreadCount(UUID userId) {
