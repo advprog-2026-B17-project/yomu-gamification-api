@@ -18,14 +18,14 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         default_schema: gamification
-   rabbitmq:
-     host: ${RABBITMQ_HOST}
-     port: ${RABBITMQ_PORT}
-     username: ${RABBITMQ_USERNAME}
-     password: ${RABBITMQ_PASSWORD}
-     virtual-host: ${RABBITMQ_VHOST}
-     ssl:
-       enabled: ${RABBITMQ_SSL_ENABLED:false}
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+    virtual-host: ${RABBITMQ_VHOST}
+    ssl:
+      enabled: ${RABBITMQ_SSL_ENABLED:false}
 
 management:
   endpoints:
