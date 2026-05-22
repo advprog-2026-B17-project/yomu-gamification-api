@@ -108,7 +108,7 @@ public class ClanController {
         try {
             UUID clanUuid = UUID.fromString(id);
             UUID userUuid = UUID.fromString(userId);
-            boolean isAdmin = "ROLE_ADMIN".equals(userRole);
+            boolean isAdmin = "admin".equals(userRole);
             clanService.deleteClan(userUuid, clanUuid, isAdmin);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {

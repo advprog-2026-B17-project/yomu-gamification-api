@@ -58,7 +58,7 @@ public class AchievementAdminController {
     }
 
     private void requireAdmin(String userRole) {
-        if (!"ROLE_ADMIN".equals(userRole)) {
+        if (!"admin".equals(userRole)) {
             throw new ForbiddenException("Admin access required");
         }
     }
