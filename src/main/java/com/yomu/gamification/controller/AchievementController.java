@@ -1,6 +1,7 @@
 package com.yomu.gamification.controller;
 
 import com.yomu.gamification.dto.AchievementRow;
+import com.yomu.gamification.exception.ForbiddenException;
 import com.yomu.gamification.service.AchievementService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,33 @@ public class AchievementController {
             return ResponseEntity.ok(achievements);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PatchMapping("/{achievementId}/visibility")
+    public ResponseEntity<Void> updateVisibility(
+            @PathVariable String achievementId,
+            @RequestAttribute("userId") String userId,
+            @RequestBody VisibilityRequest request) {
+        try {
+            UUID achievementUuid = UUID.fromString(achievementId);
+            UUID userUuid = UUID.fromString(userId);
+            achievementService.updateVisibility(userUuid, achievementUuid, request.isVisible());
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    public static class VisibilityRequest {
+        private boolean visible;
+
+        public boolean isVisible() {
+            return visible;
+        }
+
+        public void setVisible(boolean visible) {
+            this.visible = visible;
         }
     }
 }

@@ -1,9 +1,8 @@
 package com.yomu.gamification.controller;
 
-import com.yomu.gamification.dto.ClanLeaderboardEntry;
-import com.yomu.gamification.dto.ClanRow;
-import com.yomu.gamification.dto.LeaderboardEntry;
+import com.yomu.gamification.dto.*;
 import com.yomu.gamification.service.ClanService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +54,63 @@ public class ClanController {
             UUID clanUuid = UUID.fromString(clanId);
             List<LeaderboardEntry> leaderboard = clanService.getClanLeaderboard(clanUuid);
             return ResponseEntity.ok(leaderboard);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<ClanDTO> createClan(
+            @RequestAttribute("userId") String userId,
+            @Valid @RequestBody CreateClanRequest request) {
+        try {
+            UUID userUuid = UUID.fromString(userId);
+            ClanDTO clan = clanService.createClan(userUuid, request);
+            return ResponseEntity.ok(clan);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/{id}/join")
+    public ResponseEntity<Void> joinClan(
+            @PathVariable String id,
+            @RequestAttribute("userId") String userId) {
+        try {
+            UUID clanUuid = UUID.fromString(id);
+            UUID userUuid = UUID.fromString(userId);
+            clanService.joinClan(userUuid, clanUuid);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/{id}/leave")
+    public ResponseEntity<Void> leaveClan(
+            @PathVariable String id,
+            @RequestAttribute("userId") String userId) {
+        try {
+            UUID clanUuid = UUID.fromString(id);
+            UUID userUuid = UUID.fromString(userId);
+            clanService.leaveClan(userUuid, clanUuid);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteClan(
+            @PathVariable String id,
+            @RequestAttribute("userId") String userId,
+            @RequestAttribute(value = "authenticated.userRole", required = false) String userRole) {
+        try {
+            UUID clanUuid = UUID.fromString(id);
+            UUID userUuid = UUID.fromString(userId);
+            boolean isAdmin = "ROLE_ADMIN".equals(userRole);
+            clanService.deleteClan(userUuid, clanUuid, isAdmin);
+            return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
